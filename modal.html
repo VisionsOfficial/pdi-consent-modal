@@ -1093,7 +1093,7 @@
                       color: #000000;
                       font-weight: 500;
                   }
-                  #btn-consent, .btn-next, .btn-next-notice {
+                  #btn-consent, .btn-next, .btn-next-notice, .btn-close {
                       background: ${this.branding.colors.primary};
                       border: 1px solid ${this.branding.colors.primary};
                       transition: all 0.1s ease-in;
@@ -1103,7 +1103,7 @@
                       border: 1px solid ${this.branding.colors.primary};
                       transition: all 0.1s ease-in;
                   }
-                  #btn-consent:hover, #btn-decline:hover, .btn-next:hover, .btn-next-notice:hover {
+                  #btn-consent:hover, #btn-decline:hover, .btn-next:hover, .btn-next-notice:hover, .btn-close:hover {
                     background: ${this.branding.colors.secondary};
                     border-color: ${this.branding.colors.secondary};
                     color: #ffffff;
@@ -1624,12 +1624,19 @@
               </div>
           `;
 
+          const modalHeaderSuccess = `
+              <div class="consent-modal-header success">
+                <h3 class="consent-modal-header-purpose">Congrat you consent was successfuly create.</h3>  
+              </div>
+          `;
+
           const newHeader = {
             choose: modalHeader,
             learnMore: modalHeaderLearnMore,
             legal: modalHeaderLegal,
             chooseExchange: modalHeaderExchange,
             choosePrivacyNotice: modalHeaderPrivacyNotice,
+            success: modalHeaderSuccess,
           };
 
           return newHeader[modalContent];
@@ -1723,7 +1730,9 @@
                             <details class="card-toggle">
                               <summary>
                                 <span>
-                                  <img class="participant-logo" src="" alt="logo ${r?.legalName}" />
+                                  <img class="participant-logo" src="" alt="logo ${
+                                    r?.legalName
+                                  }" />
                                   <span class="participant-information">
                                     <p>
                                       ${r?.legalName}
@@ -1736,7 +1745,16 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
                               </summary>
                               <div>
-                                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p>
+                                ${privacyNotice?.content?.purposes?.map(
+                                  (p) =>
+                                    `
+                                    <div>
+                                      <p><b>${p?.name}</b></p>
+                                      <p>${p?.description}</p>
+                                      <p><b>You can find this data here:</b> ${p?.location}</p>
+                                    </div>
+                                  `
+                                )}
                               </div>
                           </details>
                           `
@@ -1796,59 +1814,6 @@
                           `
                       )}
                     </div>
-                    <details class="purpose-data-sharing">
-                      <summary>
-                        <span>Purpose of data sharing</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
-                      </summary>
-                      <div>
-                        ${privacyNotice?.content?.purposes?.map(
-                          (p) =>
-                            `
-                            <details class="card-toggle-data">
-                              <summary>
-                                <span>${p?.name}</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
-                              </summary>
-                              <div>
-                                <p>${p?.description}</p>
-                                <p><b>You can find this data here:</b> ${
-                                  p?.location
-                                }</p>
-                              </div>
-                            </details>
-                            ${p?.softwareResources?.map(
-                              (sr) =>
-                                `
-                                <details class="card-toggle-data">
-                                  <summary>
-                                    <span>${sr?.name}</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
-                                  </summary>
-                                  <div>
-                                    <p>${sr?.description}</p>
-                                  </div>
-                                </details>
-                                `
-                            )}
-                            ${p?.dataResources?.map(
-                              (dr) =>
-                                `
-                                <details class="card-toggle-data">
-                                  <summary>
-                                    <span>${dr?.name}</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
-                                  </summary>
-                                  <div>
-                                    <p>${dr?.description}</p>
-                                  </div>
-                                </details>
-                                `
-                            )}
-                            `
-                        )}
-                      </div>
-                    </details>
                   </div>
                 </div>
 
@@ -2003,52 +1968,33 @@
                   </div>
                   <div class="consent-modal-body-shared">
                       <h4>Select the data to share</h4>
-                      ${privacyNotice?.content?.purposes?.map(
-                        (p) =>
+                      ${privacyNotice?.content?.data?.map(
+                        (d) =>
                           `<div class="purpose-container">
                               <p class="purpose-obligation">Requested</p>
                               <div class="purpose-information">
-                                  <h5>${p?.name}</h5>
-                                  <span>${p?.description}</span>
+                                  <h5>${d?.name}</h5>
+                                  <span>${d?.description}</span>
                               </div>
                               <div class="purpose-sr">
-                                  ${p?.softwareResources?.map(
+                                  ${d?.softwareResources?.map(
                                     (sr, index) =>
                                       `
                                       <div class="purpose-sr-information">
                                           <span class="purpose-sr-information-name">${sr?.name}</span>
                                           <span>${sr?.description}</span>
                                       </div>
-                                      <div class="switch">
-                                          <input
-                                              type="checkbox"
-                                              class="switch-input"
-                                              id="switch_${sr?._id}_${index}"
-                                              name="switch_${sr?._id}_${index}"
-                                              checked
-                                          />
-                                          <label for="switch_${sr?._id}_${index}" class="switch-label"></label>
-                                      </div>
                                       `
                                   )}
                               </div>
                               <div>
-                                  ${p?.dataResources?.map(
+                                  ${d?.dataResources?.map(
                                     (dt, index) =>
                                       `
                                       <div class="purpose-sr">
                                           <div class="purpose-sr-information">
                                               <span class="purpose-sr-information-name">${dt?.name}</span>
                                               <span>${dt?.description}</span>
-                                          </div>
-                                          <div class="switch">
-                                              <input
-                                                  type="checkbox"
-                                                  class="switch-input"
-                                                  id="switch_${dt?._id}_${index}"
-                                                  name="switch_${dt?._id}_${index}"
-                                              />
-                                              <label for="switch_${dt?._id}_${index}" class="switch-label"></label>
                                           </div>
                                       </div>
                                       `
@@ -2090,12 +2036,17 @@
               </div>
               `;
 
+          const modalBodySuccess = `
+              <div></div>
+          `;
+
           const newBody = {
             choose: modalBody,
             learnMore: modalBodyLearnMore,
             chooseExchange: modalBodyExchanges,
             choosePrivacyNotice: modalBodyPrivacyNotices,
             legal: modalBodyLegal,
+            success: modalBodySuccess,
           };
 
           return newBody[modalContent];
@@ -2118,6 +2069,14 @@
             </div>
           `;
 
+          const modalFooterSuccess = `
+            <div class="consent-modal-footer">
+                <div class="consent-modal-footer-buttons">
+                    <button class="btn-close">I understand</button>
+                </div>
+            </div>
+          `;
+
           const modalFooter = `
               <div class="consent-modal-footer">
                   <div class="consent-modal-footer-buttons">
@@ -2133,6 +2092,8 @@
             ? modalFooterExchange
             : modalContent === "choosePrivacyNotice"
             ? modalFooterPrivacyNotice
+            : modalContent === "success"
+            ? modalFooterSuccess
             : modalFooter;
         }
 
@@ -2144,7 +2105,7 @@
                       <button class="btn-legal">Legal</button>
                   </div>
               `;
-          return modalContent === "chooseExchange"
+          return modalContent === "chooseExchange" || modalContent === "success"
             ? '<div class="consent-modal-extra"></div>'
             : modalExtra;
         }
@@ -2187,16 +2148,15 @@
               privacyNoticeId: privacyNotice?.content?._id,
               userId: this.userIdentifier,
               email: emailCustom?.value || "",
-              data: privacyNotice?.content?.data,
-              selectData,
             };
 
             const post = await fetch({
-              url: CONSENT_GRANT_URL,
+              url: "https://provider-data-connector-253244a6c16c.herokuapp.com/private/consent/",
               body: JSON.stringify(payload),
               headers: {
                 "content-type": "application/json",
               },
+              method: "POST",
             });
 
             if (!post) {
@@ -2207,8 +2167,33 @@
               buttonConsent.removeAttribute("disabled");
               buttonConsent.classList.remove("button-disabled");
               buttonConsent.innerHTML = defaultInnerHtml;
-              modalBackdrop.style.display = "none";
             }, 2000);
+
+            this.modalContent = "success";
+
+            const newHeader = await this.renderConsentModalHeader(
+              "",
+              this.modalContent
+            );
+            const newBody = await this.renderConsentModalBody(
+              "",
+              this.modalContent
+            );
+            const newFooter = await this.renderConsentModalFooter(
+              this.modalContent
+            );
+            const newExtra = this.renderConsentModalExtra(this.modalContent);
+
+            shadowHeader.innerHTML = newHeader;
+            shadowBody.innerHTML = newBody;
+            shadowFooter.innerHTML = newFooter;
+            shadowExtra.innerHTML = newExtra;
+
+            const buttonClose = consentModal.querySelector(".btn-close");
+
+            buttonClose?.addEventListener("click", () => {
+              modalBackdrop.style.display = "none";
+            });
           });
         }
 
@@ -2567,17 +2552,18 @@
               privacyNoticeId: privacyNotice?.content?._id,
               userId: this.userIdentifier,
               email: emailCustom?.value || "",
-              data: privacyNotice?.content?.data,
-              selectData,
             };
 
-            const post = await fetch({
-              url: CONSENT_GRANT_URL,
-              body: JSON.stringify(payload),
-              headers: {
-                "content-type": "application/json",
-              },
-            });
+            const post = await fetch(
+              "https://provider-data-connector-253244a6c16c.herokuapp.com/private/consent",
+              {
+                method: "POST",
+                body: JSON.stringify(payload),
+                headers: {
+                  "content-type": "application/json",
+                },
+              }
+            );
 
             if (!post) {
               throw new Error("Failed to post the current consent");
@@ -2587,8 +2573,33 @@
               buttonConsent.removeAttribute("disabled");
               buttonConsent.classList.remove("button-disabled");
               buttonConsent.innerHTML = defaultInnerHtml;
-              modalBackdrop.style.display = "none";
             }, 2000);
+
+            this.modalContent = "success";
+
+            const newHeader = await this.renderConsentModalHeader(
+              "",
+              this.modalContent
+            );
+            const newBody = await this.renderConsentModalBody(
+              "",
+              this.modalContent
+            );
+            const newFooter = await this.renderConsentModalFooter(
+              this.modalContent
+            );
+            const newExtra = this.renderConsentModalExtra(this.modalContent);
+
+            shadowHeader.innerHTML = newHeader;
+            shadowBody.innerHTML = newBody;
+            shadowFooter.innerHTML = newFooter;
+            shadowExtra.innerHTML = newExtra;
+
+            const buttonClose = consentModal.querySelector(".btn-close");
+
+            buttonClose?.addEventListener("click", () => {
+              modalBackdrop.style.display = "none";
+            });
           });
 
           this.shadowRoot.innerHTML = "";
