@@ -8,9 +8,11 @@
   <body>
     <consent-modal
       id="my-consent-modal"
-      data-availableExchangesEndpoint="https://provider-data-connector-253244a6c16c.herokuapp.com/private/consent/exchanges/provider"
-      data-PDCAdminJWT="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlS2V5IjoiQTVkdzY5OHNuWGlKUlZmYjZjTTR1RDd3M2JDTWdhbllKZ2VIWmZERGNIcE41QnlESmJOUE1XQm50TktCYVhqTlJ6dVd6NzRRUDlHVU5ZWEdxR2plVWJNMzY3YUhaTnNaRlNKNCIsImlhdCI6MTcxMjI0NDI1NTc1MCwiZXhwIjoxNzEyMjQ0MjU2MDUwfQ.XgjCPbVq9ZTAiHVJT8B5ztkehk1d7LaCvoYmus1xHCM"
-      data-userIdentifier="65646d4320ec42ff2e719706"
+      data-availableExchangesEndpoint=""
+      data-PDCAdminJWT=""
+      data-privacyNoticeEndpoint=""
+      data-consentGrantEndPoint=""
+      data-userIdentifier=""
     >
       <!-- <button slot="buttonOpenModal">Custom open</button> -->
     </consent-modal>
@@ -30,16 +32,20 @@
             translateY: "",
           },
         },
+        // Your hexa or rgba colors
         colors: {
           primary: "",
           secondary: "",
           tertiary: "",
+          //This gradient key is the color of the background header
+          // You can use gradient color or hexa color
           gradient: "",
           bgOpacity: "",
           buttonText: {
             initial: "",
             hover: "",
           },
+          // This value concern element to be selected
           active: {
             background: "",
             text: "",
