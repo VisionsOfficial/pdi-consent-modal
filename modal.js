@@ -599,6 +599,7 @@ class ConsentModal extends HTMLElement {
     this.privacyNoticeEndpoint = this.getAttribute(
       "data-privacyNoticeEndpoint"
     );
+    this.consentGrantEndPoint = this.getAttribute("data-consentGrantEndPoint");
     this.userIdentifier = this.getAttribute("data-userIdentifier");
     this.branding = {
       img: {
@@ -2154,8 +2155,7 @@ class ConsentModal extends HTMLElement {
         email: emailCustom?.value || "",
       };
 
-      const post = await fetch({
-        url: "https://provider-data-connector-253244a6c16c.herokuapp.com/private/consent/",
+      const post = await fetch(this.consentGrantEndPoint, {
         body: JSON.stringify(payload),
         headers: {
           "content-type": "application/json",
@@ -2551,16 +2551,13 @@ class ConsentModal extends HTMLElement {
         email: emailCustom?.value || "",
       };
 
-      const post = await fetch(
-        "https://provider-data-connector-253244a6c16c.herokuapp.com/private/consent",
-        {
-          method: "POST",
-          body: JSON.stringify(payload),
-          headers: {
-            "content-type": "application/json",
-          },
-        }
-      );
+      const post = await fetch(this.consentGrantEndPoint, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "content-type": "application/json",
+        },
+      });
 
       if (!post) {
         throw new Error("Failed to post the current consent");
