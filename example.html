@@ -8,11 +8,9 @@
   <body>
     <consent-modal
       id="my-consent-modal"
-      data-availableExchangesEndpoint=""
-      data-PDCAdminJWT=""
-      data-privacyNoticeEndpoint=""
-      data-userIdentifier=""
-      data-consentGrantEndPoint=""
+      data-availableExchangesEndpoint="https://provider-data-connector-253244a6c16c.herokuapp.com/private/consent/exchanges/provider"
+      data-PDCAdminJWT="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXJ2aWNlS2V5IjoiQTVkdzY5OHNuWGlKUlZmYjZjTTR1RDd3M2JDTWdhbllKZ2VIWmZERGNIcE41QnlESmJOUE1XQm50TktCYVhqTlJ6dVd6NzRRUDlHVU5ZWEdxR2plVWJNMzY3YUhaTnNaRlNKNCIsImlhdCI6MTcxMjI0NDI1NTc1MCwiZXhwIjoxNzEyMjQ0MjU2MDUwfQ.XgjCPbVq9ZTAiHVJT8B5ztkehk1d7LaCvoYmus1xHCM"
+      data-userIdentifier="65646d4320ec42ff2e719706"
     >
       <!-- <button slot="buttonOpenModal">Custom open</button> -->
     </consent-modal>
@@ -21,9 +19,12 @@
     <script>
       const branding = {
         img: {
+          // Your source path
           src: "",
+          // Your text alt
           alt: "",
           size: {
+            // Value in px,rem,em,etc for all keys
             width: "",
             height: "",
             translateY: "",

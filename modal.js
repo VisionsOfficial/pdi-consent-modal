@@ -1738,9 +1738,11 @@ class ConsentModal extends HTMLElement {
                         <details class="card-toggle">
                           <summary>
                             <span>
-                              <img class="participant-logo" src="" alt="logo ${
-                                r?.legalName
-                              }" />
+                              <img class="participant-logo" src="${
+                                r?.logo?.includes("https")
+                                  ? r?.logo
+                                  : `https://api.visionstrust.com/images/${r?.logo}`
+                              }"  alt="logo ${r?.legalName}" />
                               <span class="participant-information">
                                 <p>
                                   ${r?.legalName}
@@ -1941,9 +1943,15 @@ class ConsentModal extends HTMLElement {
               <div class="consent-modal-body-exchange">
                   <div class="consent-modal-body-exchange-participant">
                       <div class="consent-modal-body-provider">
-                          <img class="participant-logo" src="" / alt="Logo ${
-                            privacyNotice?.content?.dataProvider?.legalName
-                          }">
+                          <img class="participant-logo" <img class="participant-logo" src="${
+                            privacyNotice?.content?.dataProvider?.logo?.includes(
+                              "https"
+                            )
+                              ? privacyNotice?.content?.dataProvider?.logo
+                              : `https://api.visionstrust.com/images/${privacyNotice?.content?.dataProvider?.logo}`
+                          }" alt="Logo ${
+      privacyNotice?.content?.dataProvider?.legalName
+    }">
                           <div class="controller-identify">
                               <span>${
                                 privacyNotice?.content?.dataProvider?.legalName
@@ -1963,7 +1971,11 @@ class ConsentModal extends HTMLElement {
                       ${privacyNotice?.content?.recipients?.map(
                         (r) => `
                               <div class="consent-modal-body-consumer">
-                                  <img class="participant-logo" src="" alt="logo ${r?.legalName}" />
+                                  <img class="participant-logo" <img class="participant-logo" src="${
+                                    r?.logo?.includes("https")
+                                      ? r?.logo
+                                      : `https://api.visionstrust.com/images/${r?.logo}`
+                                  }" alt="logo ${r?.legalName}" />
                                   <div class="controller-identify">
                                       <span>${r?.legalName}</span>
                                       <span>Controller's identify</span>
