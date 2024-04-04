@@ -592,7 +592,7 @@ class ConsentModal extends HTMLElement {
     super();
 
     this.attachShadow({ mode: "open" });
-    this.DSCAdminJWT = this.getAttribute("data-DSCAdminJWT");
+    this.PDCAdminJWT = this.getAttribute("data-PDCAdminJWT");
     this.availableExchangesEndpoint = this.getAttribute(
       "data-availableExchangesEndpoint"
     );
@@ -610,6 +610,17 @@ class ConsentModal extends HTMLElement {
             }" />`
           : logoVT,
         alt: JSON.parse(this.getAttribute("data-branding"))?.img?.alt,
+        size: {
+          width:
+            JSON.parse(this.getAttribute("data-branding"))?.img?.size?.width ||
+            "70px",
+          height:
+            JSON.parse(this.getAttribute("data-branding"))?.img?.size?.height ||
+            "70px",
+          translateY:
+            JSON.parse(this.getAttribute("data-branding"))?.img?.size
+              ?.translateY || "30%",
+        },
       },
       colors: {
         primary:
@@ -630,6 +641,22 @@ class ConsentModal extends HTMLElement {
         bgOpacity:
           JSON.parse(this.getAttribute("data-branding"))?.colors?.bgOpacity ||
           "#08FFAD1f",
+        buttonText: {
+          initial:
+            JSON.parse(this.getAttribute("data-branding"))?.colors?.buttonText
+              ?.initial || "#000000",
+          hover:
+            JSON.parse(this.getAttribute("data-branding"))?.colors?.buttonText
+              ?.hover || "#ffffff",
+        },
+        active: {
+          background:
+            JSON.parse(this.getAttribute("data-branding"))?.colors?.active
+              ?.background || "#00A2AE",
+          text:
+            JSON.parse(this.getAttribute("data-branding"))?.colors?.active
+              ?.text || "#000000",
+        },
       },
     };
     this.demo = this.getAttribute("data-demo") || "false";
@@ -643,7 +670,7 @@ class ConsentModal extends HTMLElement {
       try {
         const response = await fetch(currentPrivacyNotice, {
           headers: {
-            Authorization: `Bearer ${this.DSCAdminJWT}`,
+            Authorization: `Bearer ${this.PDCAdminJWT}`,
           },
         });
         const json = await response.json();
@@ -671,7 +698,7 @@ class ConsentModal extends HTMLElement {
     try {
       const res = await fetch(this.availableExchangesEndpoint, {
         headers: {
-          Authorization: `Bearer ${this.DSCAdminJWT}`,
+          Authorization: `Bearer ${this.PDCAdminJWT}`,
         },
       });
       const json = await res?.json();
@@ -766,7 +793,7 @@ class ConsentModal extends HTMLElement {
   }
 
   async render() {
-    if (this.DSCAdminJWT && this.availableExchangesEndpoint) {
+    if (this.PDCAdminJWT && this.availableExchangesEndpoint) {
       try {
         const availableExchanges = await this.getAvailableExchanges();
         const contracts = await this.getContracts(availableExchanges?.content);
@@ -827,7 +854,7 @@ class ConsentModal extends HTMLElement {
                 font-family: "KoHo", sans-serif;
                 border: 1px solid #fefefe;
                 background-color: ${this.branding.colors.primary};
-                color: #fefefe;
+                color: ${this.branding.colors.buttonText.initial};
                 padding: 0.6rem 1rem;
                 cursor: pointer;
                 transition: all 0.1s ease-in-out;
@@ -835,6 +862,7 @@ class ConsentModal extends HTMLElement {
               }
               #button-open-modal:hover {
                 background-color: ${this.branding.colors.secondary};
+                color: ${this.branding.colors.buttonText.hover};
               }
 
               #consent-modal {
@@ -875,24 +903,24 @@ class ConsentModal extends HTMLElement {
               }
 
               .consent-modal-head-logo {
-                  width: 70px;
-                  height: 70px;
+                  width: ${this.branding.img.size.width};
+                  height: ${this.branding.img.size.height};
                   position: absolute;
                   margin-left: auto;
                   margin-right: auto;
                   left: 0;
                   right: 0;
                   text-align: center;
-                  transform: translateY(30%);
-                  object-fit: contain;
+                  transform: translateY(${this.branding.img.size.translateY});
               }
               .consent-modal-head-logo img, .consent-modal-head-logo  svg {
-                width: 70px;
-                height: 70px;
-                max-width: 70px;
-                min-width: 70px;
-                min-height: 70px;
-                max-height: 70px;
+                width: ${this.branding.img.size.width};
+                height: ${this.branding.img.size.height};
+                max-width: ${this.branding.img.size.width};
+                min-width: ${this.branding.img.size.width};
+                min-height: ${this.branding.img.size.height};
+                max-height: ${this.branding.img.size.height};
+                object-fit: contain;
               }
 
               .consent-modal-close {
@@ -1061,13 +1089,13 @@ class ConsentModal extends HTMLElement {
                   font-size: 18px;
                   padding: 12px 24px;
                   min-width: 150px;
-                  color: #000000;
                   font-weight: 500;
               }
               #btn-consent, .btn-next, .btn-next-notice, .btn-close {
                   background: ${this.branding.colors.primary};
                   border: 1px solid ${this.branding.colors.primary};
                   transition: all 0.1s ease-in;
+                  color: ${this.branding.colors.buttonText.initial};
               }
               #btn-decline {
                   background: #ffffff;
@@ -1077,7 +1105,7 @@ class ConsentModal extends HTMLElement {
               #btn-consent:hover, #btn-decline:hover, .btn-next:hover, .btn-next-notice:hover, .btn-close:hover {
                 background: ${this.branding.colors.secondary};
                 border-color: ${this.branding.colors.secondary};
-                color: #ffffff;
+                color: ${this.branding.colors.buttonText.hover};
               }
               .btn-next, .btn-next-notice {
                 margin-block: 12px;
@@ -1104,7 +1132,8 @@ class ConsentModal extends HTMLElement {
                   height: 40px;
               }
               .consent-modal-extra .active {
-                  background: ${this.branding.colors.primary}
+                  background: ${this.branding.colors.primary};
+                  color: ${this.branding.colors.buttonText.initial};
               }
               .consent-modal-extra button:first-child {
                   border-left: 0;
@@ -1460,13 +1489,15 @@ class ConsentModal extends HTMLElement {
                 gap: 12px;
               }
               .contract-item:hover {
-                background: ${this.branding.colors.primary}20;
+                background: ${this.branding.colors.active.background}20;
               }
               .contract-active {
-                background: ${this.branding.colors.primary};
+                background: ${this.branding.colors.active.background};
+                color: ${this.branding.colors.active.text};
               }
               .contract-active:hover {
-                background: ${this.branding.colors.primary};
+                background: ${this.branding.colors.active.background};
+                color: ${this.branding.colors.active.text};
               }
 
               .consent-modal-select-privacy-notice {
@@ -1479,13 +1510,19 @@ class ConsentModal extends HTMLElement {
                 gap: 12px;
               }
               .privacy-notice-container:hover {
-                background: ${this.branding.colors.primary}20;
+                background: ${this.branding.colors.active.background}20;
               }
               .privacy-notice-container-active {
-                background: ${this.branding.colors.primary};
+                background: ${this.branding.colors.active.background};
+                color: ${this.branding.colors.active.text};
               }
               .privacy-notice-container-active:hover {
-                background: ${this.branding.colors.primary};
+                background: ${this.branding.colors.active.background};
+                color: ${this.branding.colors.active.text};
+              }
+
+              .inner-toggle {
+                margin-block: 4px;
               }
 
               @keyframes rotate {
@@ -1751,12 +1788,10 @@ class ConsentModal extends HTMLElement {
                           <p><b>You can find this data here:</b> ${
                             d?.location
                           }</p>
-                        </div>
-                      </details>
-                      ${d?.softwareResources?.map(
-                        (sr) =>
-                          `
-                          <details class="card-toggle-data">
+                          ${d?.softwareResources?.map(
+                            (sr) =>
+                              `
+                          <details class="card-toggle-data inner-toggle">
                             <summary>
                               <span>${sr?.name}</span>
                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
@@ -1766,11 +1801,11 @@ class ConsentModal extends HTMLElement {
                             </div>
                           </details>
                           `
-                      )}
+                          )}
                       ${d?.dataResources?.map(
                         (dr) =>
                           `
-                          <details class="card-toggle-data">
+                          <details class="card-toggle-data inner-toggle">
                             <summary>
                               <span>${dr?.name}</span>
                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
@@ -1781,6 +1816,8 @@ class ConsentModal extends HTMLElement {
                           </details>
                           `
                       )}
+                        </div>
+                      </details>
                       `
                   )}
                 </div>
@@ -2052,7 +2089,7 @@ class ConsentModal extends HTMLElement {
                   <slot name="btn-decline"><button id="btn-decline">Decline</button></slot>
               </div>
               <div class="consent-modal-footer-certified">
-                  Certified consents by <span class="logo-certified">${this.branding.img.src}</span> <b>Visionstrust</b>
+                  Certified consents by <span class="logo-certified">${logoVT}</span> <b>Visionstrust</b>
               </div>
           </div>
           `;
@@ -2082,7 +2119,7 @@ class ConsentModal extends HTMLElement {
     return `<span class="simple-loader"></span>`;
   }
 
-  renderLogicButtonConsent(myHTMLElement, privacyNotice) {
+  renderLogicButtonConsent(myHTMLElement, privacyNotice, shadowContent) {
     const buttonConsent = myHTMLElement?.querySelector("#btn-consent");
     const switchInputs = myHTMLElement?.querySelectorAll(".switch-input");
     const emailCustom = myHTMLElement?.querySelector("#email-custom");
@@ -2146,15 +2183,15 @@ class ConsentModal extends HTMLElement {
       const newFooter = await this.renderConsentModalFooter(this.modalContent);
       const newExtra = this.renderConsentModalExtra(this.modalContent);
 
-      shadowHeader.innerHTML = newHeader;
-      shadowBody.innerHTML = newBody;
-      shadowFooter.innerHTML = newFooter;
-      shadowExtra.innerHTML = newExtra;
+      shadowContent.header.innerHTML = newHeader;
+      shadowContent.body.innerHTML = newBody;
+      shadowContent.footer.innerHTML = newFooter;
+      shadowContent.extra.innerHTML = newExtra;
 
-      const buttonClose = consentModal.querySelector(".btn-close");
+      const buttonClose = myHTMLElement.querySelector(".btn-close");
 
       buttonClose?.addEventListener("click", () => {
-        modalBackdrop.style.display = "none";
+        shadowContent.backdrop.style.display = "none";
       });
     });
   }
@@ -2282,7 +2319,7 @@ class ConsentModal extends HTMLElement {
 
       const privacyNotices = await fetch(privacyNoticesEndPoint, {
         headers: {
-          Authorization: `Bearer ${this.DSCAdminJWT}`,
+          Authorization: `Bearer ${this.PDCAdminJWT}`,
         },
       });
 
@@ -2414,11 +2451,23 @@ class ConsentModal extends HTMLElement {
             shadowHeader.innerHTML = newHeader;
             shadowBody.innerHTML = newBody;
             shadowFooter.innerHTML = newFooter;
-            this.renderLogicButtonConsent(consentModal, this.privacyNotice);
+            this.renderLogicButtonConsent(consentModal, this.privacyNotice, {
+              header: shadowHeader,
+              body: shadowBody,
+              footer: shadowFooter,
+              extra: shadowExtra,
+              backdrop: modalBackdrop,
+            });
             this.renderLogicButtonDecline(consentModal, modalBackdrop);
           });
         });
-        this.renderLogicButtonConsent(consentModal, this.privacyNotice);
+        this.renderLogicButtonConsent(consentModal, this.privacyNotice, {
+          header: shadowHeader,
+          body: shadowBody,
+          footer: shadowFooter,
+          extra: shadowExtra,
+          backdrop: modalBackdrop,
+        });
         this.renderLogicButtonDecline(consentModal, modalBackdrop);
       });
     });
@@ -2451,6 +2500,15 @@ class ConsentModal extends HTMLElement {
         shadowHeader.innerHTML = newHeader;
         shadowBody.innerHTML = newBody;
         shadowFooter.innerHTML = newFooter;
+
+        this.renderLogicButtonConsent(consentModal, this.privacyNotice, {
+          header: shadowHeader,
+          body: shadowBody,
+          footer: shadowFooter,
+          extra: shadowExtra,
+          backdrop: modalBackdrop,
+        });
+        this.renderLogicButtonDecline(consentModal, modalBackdrop);
       });
     });
 
