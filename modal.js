@@ -2154,7 +2154,7 @@ class ConsentModal extends HTMLElement {
         });
       });
 
-      if (!regexEmail.test(emailCustom?.value)) {
+      if (emailCustom?.value !== "" && !regexEmail.test(emailCustom?.value)) {
         buttonConsent.removeAttribute("disabled");
         buttonConsent.classList.remove("button-disabled");
         buttonConsent.innerHTML = defaultInnerHtml;
@@ -2550,7 +2550,7 @@ class ConsentModal extends HTMLElement {
         });
       });
 
-      if (!regexEmail.test(emailCustom?.value)) {
+      if (emailCustom?.value !== "" && !regexEmail.test(emailCustom?.value)) {
         buttonConsent.removeAttribute("disabled");
         buttonConsent.classList.remove("button-disabled");
         buttonConsent.innerHTML = defaultInnerHtml;
