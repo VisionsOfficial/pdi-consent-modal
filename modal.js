@@ -599,7 +599,7 @@ class ConsentModal extends HTMLElement {
     this.privacyNoticeEndpoint = this.getAttribute(
       "data-privacyNoticeEndpoint"
     );
-    this.consentGrantEndPoint = this.getAttribute("data-consentGrantEndPoint");
+    this.consentGrantEndpoint = this.getAttribute("data-consentGrantEndpoint");
     this.userIdentifier = this.getAttribute("data-userIdentifier");
     this.branding = {
       img: {
@@ -2167,7 +2167,7 @@ class ConsentModal extends HTMLElement {
         email: emailCustom?.value || "",
       };
 
-      const post = await fetch(this.consentGrantEndPoint, {
+      const post = await fetch(this.consentGrantEndpoint, {
         body: JSON.stringify(payload),
         headers: {
           "content-type": "application/json",
@@ -2563,7 +2563,7 @@ class ConsentModal extends HTMLElement {
         email: emailCustom?.value || "",
       };
 
-      const post = await fetch(this.consentGrantEndPoint, {
+      const post = await fetch(this.consentGrantEndpoint, {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {

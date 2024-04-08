@@ -1,0 +1,27 @@
+{
+	"name": "pdi-consent-modal",
+	"version": "1.0.0",
+	"description": "Web component for a consent modal, designed to guide users through consent management processes.",
+	"main": "modal.js",
+	"scripts": {
+		"minify": "minify modal.js > modal.min.js"
+	},
+	"keywords": [
+		"consent",
+		"modal",
+		"web component"
+	],
+	"author": "Visions",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/VisionsOfficial/pdi-consent-modal.git"
+	},
+	"bugs": {
+		"url": "https://github.com/VisionsOfficial/pdi-consent-modal/issues"
+	},
+	"homepage": "https://github.com/VisionsOfficial/pdi-consent-modal#readme",
+	"devDependencies": {
+		"minify": "^11.1.1"
+	}
+}
