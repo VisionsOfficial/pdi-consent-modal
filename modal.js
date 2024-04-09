@@ -1156,6 +1156,7 @@ class ConsentModal extends HTMLElement {
               .purpose-container, .bi-lateral, .dsuc, .privacy-notice-container {
                   display: flex;
                   flex-direction: column;
+                  align-items: stretch;
                   gap: 16px;
                   background: ${this.branding.colors.bgOpacity};
                   padding: 10px;
@@ -1526,6 +1527,17 @@ class ConsentModal extends HTMLElement {
                 margin-block: 4px;
               }
 
+              .recipient-third-parties {
+                background: #ffffff;
+                padding: 4px 8px;
+                border-radius: 8px;
+                font-size: 14px;
+                font-size: 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+              }
+
               @keyframes rotate {
                   100% {
                       transform: rotate(360deg);
@@ -1561,6 +1573,142 @@ class ConsentModal extends HTMLElement {
           `;
 
     return styleModal;
+  }
+
+  renderCardToggleSoftwareResource(sr, details) {
+    return `
+    <details class="card-toggle-data">
+      <summary>
+        <span>${details ? "details" : sr?.name}</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
+      </summary>
+      <div>
+        ${
+          details
+            ? ""
+            : `
+        <p>${sr?.description}</p>
+        <br />
+        `
+        }
+        ${
+          sr?.b2cDescription
+            ? `
+          <div>
+            <p><b>B2C description</b></p>
+            <p>${sr?.b2cDescription}</p>
+          </div>
+        `
+            : ""
+        }
+        ${
+          sr?.jurisdiction
+            ? `
+          <div>
+            <p><b>Jurisdiction</b></p>
+            <p>${sr?.jurisdiction}</p>
+          </div>
+        `
+            : ""
+        }
+        ${
+          sr?.retention_period
+            ? `
+          <div>
+            <p><b>Retention period</b></p>
+            <p>${sr?.retention_period}</p>
+          </div>
+        `
+            : ""
+        }
+        ${
+          sr?.recipient_third_parties?.length > 0
+            ? `
+          <p><b>Recipient third parties</b></p>
+          <div class="recipient-third-parties">
+            ${sr?.recipient_third_parties
+              ?.map(
+                (rtp) =>
+                  `
+                <div>
+                  <p><b>Party name</b></p>
+                  <p>${rtp?.party_name}</p>
+                </div>
+                <div>
+                  <p><b>Party type</b></p>
+                  <p>${rtp?.party_type}</p>
+                </div>
+                <div>
+                  <p><b>Party address</b></p>
+                  <p>${rtp?.party_address}</p>
+                </div>
+                ${
+                  rtp?.party_role
+                    ? `<div>
+                <p><b>Party role</b></p>
+                <p>${rtp?.party_role}</p>
+              </div>`
+                    : ""
+                }
+                ${
+                  rtp?.party_email
+                    ? `<div>
+                <p><b>Party email</b></p>
+                <p>${rtp?.party_email}</p>
+              </div>`
+                    : ""
+                }
+                ${
+                  rtp?.party_url
+                    ? `<div>
+                <p><b>Party url</b></p>
+                <p>${rtp?.party_url}</p>
+              </div>`
+                    : ""
+                }
+                ${
+                  rtp?.party_phone
+                    ? `<div>
+                <p><b>Party phone</b></p>
+                <p>${rtp?.party_phone}</p>
+              </div>`
+                    : ""
+                }
+              `
+              )
+              .join("")}
+          </div>
+          `
+            : ""
+        }
+      </div>
+    </details>
+    `;
+  }
+
+  renderCardToggleDataResource(dr) {
+    return `
+      <details class="card-toggle-data inner-toggle">
+        <summary>
+          <span>${dr?.name}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <div>
+          <p>${dr?.description}</p>
+          ${
+            dr?.b2cDescription
+              ? `
+            <br />
+            <div>
+              <p><b>B2C description</b>:</p>
+              <p>${dr?.b2cDescription}</p>
+            </div>
+          `
+              : ""
+          }
+        </div>
+    </details>
+    `;
   }
 
   renderConsentModalBgHeader() {
@@ -1761,7 +1909,18 @@ class ConsentModal extends HTMLElement {
                                 <div>
                                   <p><b>${p?.name}</b></p>
                                   <p>${p?.description}</p>
-                                  <p><b>You can find this data here:</b> ${p?.location}</p>
+                                  <p><b>You can find this data here:</b> ${
+                                    p?.location
+                                  }</p>
+                                  <div style="margin-block: 8px;">
+                                    ${p?.softwareResources
+                                      ?.map((sr) =>
+                                        this.renderCardToggleSoftwareResource(
+                                          sr
+                                        )
+                                      )
+                                      .join("")}
+                                  </div>
                                 </div>
                               `
                             )}
@@ -1791,33 +1950,11 @@ class ConsentModal extends HTMLElement {
                           <p><b>You can find this data here:</b> ${
                             d?.location
                           }</p>
-                          ${d?.softwareResources?.map(
-                            (sr) =>
-                              `
-                          <details class="card-toggle-data inner-toggle">
-                            <summary>
-                              <span>${sr?.name}</span>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
-                            </summary>
-                            <div>
-                              <p>${sr?.description}</p>
-                            </div>
-                          </details>
-                          `
+                          ${d?.softwareResources?.map((sr) =>
+                            this.renderCardToggleSoftwareResource(sr)
                           )}
-                      ${d?.dataResources?.map(
-                        (dr) =>
-                          `
-                          <details class="card-toggle-data inner-toggle">
-                            <summary>
-                              <span>${dr?.name}</span>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
-                            </summary>
-                            <div>
-                              <p>${dr?.description}</p>
-                            </div>
-                          </details>
-                          `
+                      ${d?.dataResources?.map((dr) =>
+                        this.renderCardToggleDataResource(dr)
                       )}
                         </div>
                       </details>
@@ -1828,7 +1965,6 @@ class ConsentModal extends HTMLElement {
             </div>
 
             <div class="pdi-container">
-              <h4>Personal Data intermediary</h4>
               <h5>VISIONSTRUST</h5>
               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p>
             </div>
@@ -1994,26 +2130,52 @@ class ConsentModal extends HTMLElement {
                           <div class="purpose-information">
                               <h5>${d?.name}</h5>
                               <span>${d?.description}</span>
+                              ${
+                                d?.b2cDescription
+                                  ? `<span>${d?.b2cDescription}</span>`
+                                  : ""
+                              }
                           </div>
                           <div class="purpose-sr">
                               ${d?.softwareResources?.map(
-                                (sr, index) =>
+                                (sr) =>
                                   `
                                   <div class="purpose-sr-information">
-                                      <span class="purpose-sr-information-name">${sr?.name}</span>
+                                      <span class="purpose-sr-information-name">${
+                                        sr?.name
+                                      }</span>
                                       <span>${sr?.description}</span>
+                                      ${
+                                        sr?.b2cDescription
+                                          ? `<span>${sr?.b2cDescription}</span>
+                                      ${this.renderCardToggleSoftwareResource(
+                                        sr,
+                                        true
+                                      )}`
+                                          : ""
+                                      }
+                                      
                                   </div>
                                   `
                               )}
                           </div>
                           <div>
                               ${d?.dataResources?.map(
-                                (dt, index) =>
+                                (dr) =>
                                   `
                                   <div class="purpose-sr">
                                       <div class="purpose-sr-information">
-                                          <span class="purpose-sr-information-name">${dt?.name}</span>
-                                          <span>${dt?.description}</span>
+                                          <span class="purpose-sr-information-name">${
+                                            dr?.name
+                                          }</span>
+                                          <span>${dr?.description}</span>
+                                          ${
+                                            dr?.b2cDescription
+                                              ? `<span><b>B2C description</b></span>
+                                          <span>${dr?.b2cDescription}</span>`
+                                              : ""
+                                          }
+                                          
                                       </div>
                                   </div>
                                   `
